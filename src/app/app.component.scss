@@ -1,0 +1,23 @@
+@import "_variables.scss";
+
+.container {
+  height: 100%;
+  min-height: 100vh;
+
+  ::ng-deep {
+    #mat-tab-label-0-0 {
+      width: 82%;
+      padding: 0 20px;
+      display: flex;
+      justify-content: start;
+      opacity: 1;
+
+      .mat-tab-label-content {
+        color: #fff;
+        opacity: 1;
+        letter-spacing: 2px;
+        font: 500 20px/24px $special-font;
+      }
+    }
+  }
+}
