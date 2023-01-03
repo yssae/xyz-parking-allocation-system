@@ -22,3 +22,25 @@ body {
     font: 500 18px/24px $special-font;
   }
 }
+
+.xyz-dialog {
+  .mat-dialog-container {
+    padding: 15px;
+    border-radius: 10px !important;
+  }
+  .semi-rounded-edge {
+    border-radius: 15px !important;
+  }
+}
+
+.xyz-field-error {
+  color: $font-color-error;
+  font: 400 12px/24px $primary-font;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+
+.right-aligned {
+  text-align: center;
+}

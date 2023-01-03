@@ -1,0 +1,22 @@
+<div class="container">
+  <section class="main">
+    <div class="admin-header">
+      <h1>Parking Entry Slots</h1>
+      <div class="menu">
+        <button (click)="viewCustomerList()"><mat-icon>list_alt</mat-icon></button>
+        <button (click)="setControls()"><mat-icon>settings</mat-icon></button>
+      </div>
+    </div>
+    <div class="admin-body">
+      <mat-grid-list cols="4" rowHeight="100px">
+        <mat-grid-tile
+          *ngFor="let tile of tiles"
+          [colspan]="tile.cols"
+          [rowspan]="tile.rows"
+          [style.background]="tile.color">
+          {{tile.text}}
+        </mat-grid-tile>
+      </mat-grid-list>
+    </div>
+  </section>
+</div>

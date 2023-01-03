@@ -1,0 +1,10 @@
+<div class="container">
+  <div class="field">
+    <label for="" *ngIf="fieldLabel">{{ fieldLabel }}</label>
+    <span class="input-wrapper">
+      <mat-icon *ngIf="icon"> {{ icon }}</mat-icon>
+      <input [type]="inputType" [placeholder]="placeholder" [value]="value" [name]="fieldName" [formControl]="control">
+    </span>
+  </div>
+  <ng-content></ng-content>
+</div>

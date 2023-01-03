@@ -1,0 +1,22 @@
+@import "_variables";
+
+form {
+  padding: 1.5em 1em;
+  text-align: center;
+
+  .submit-wrapper {
+    text-align: center;
+
+    button {
+      margin: 0 7px;
+      padding: 8px 15px;
+      font: 400 16px/20px $primary-font;
+      color: $font-color-secondary;
+      background-color: $color-secondary;
+    }
+
+    button:first-of-type {
+      background-color: $color-primary-md-dark;
+    }
+  }
+}

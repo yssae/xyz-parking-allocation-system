@@ -1,2 +1,27 @@
 $primary-font: Roboto, "Helvetica Neue", sans-serif;
 $special-font: 'Nunito', sans-serif;
+
+$color-primary: #233B55;
+$color-primary-md-dark: #34596F;
+$color-primary-light:#74919F;
+$color-secondary: #262626;
+
+$font-color-primary: #000000;
+$font-color-secondary: #FFFFFF;
+$font-color-error: #990000;
+
+.section-header {
+  font: 500 24px/28px $special-font;
+}
+
+.xyz-body-1 {
+  font: 500 16px/20px $primary-font;
+}
+
+.xyz-body-2 {
+  font: 500 18px/22px $primary-font;
+}
+
+.demibold-text {
+  font-weight: 600;
+}

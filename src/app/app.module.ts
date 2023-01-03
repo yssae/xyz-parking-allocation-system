@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { AppComponent } from './app.component';
 import { MaterialModule } from './shared/material.module';
 import { SharedModule } from './shared/shared.module';
+import { FeaturesModule } from './features/features.module';
 
-import { AdminComponent } from './features/admin/admin.component';
-import { CustomerComponent } from './features/customer/customer.component';
+import { AppComponent } from './app.component';
 @NgModule({
   declarations: [
-    AppComponent,
-    AdminComponent,
-    CustomerComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    ReactiveFormsModule,
     MaterialModule,
     SharedModule,
-    BrowserAnimationsModule
+    FeaturesModule
   ],
   providers: [],
   bootstrap: [AppComponent]
