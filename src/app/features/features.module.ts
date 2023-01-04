@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AdminComponent } from './admin/admin.component';
 import { ParkingSettingsComponent } from './admin/parking-settings/parking-settings.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
+import { SlotModalComponent } from './admin/slot-modal/slot-modal.component';
 
 import { CustomerComponent } from './customer/customer.component';
 @NgModule({
@@ -14,7 +15,8 @@ import { CustomerComponent } from './customer/customer.component';
     AdminComponent,
     ParkingSettingsComponent,
     CustomerListComponent,
-    CustomerComponent
+    CustomerComponent,
+    SlotModalComponent
   ],
   imports: [
     CommonModule,

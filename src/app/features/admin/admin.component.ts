@@ -1,20 +1,15 @@
 import { Component, OnInit, Input, Inject, OnDestroy } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ParkingSettingsComponent } from './parking-settings/parking-settings.component';
 import { CustomerListComponent } from './customer-list/customer-list.component';
-import { FormControl } from '@angular/forms';
-
+import { SlotModalComponent } from './slot-modal/slot-modal.component';
+import { EntryPoint } from '../models/entry-point';
+import { ParkingSlot } from '../models/parking-slot';
 import { ParkingSetting } from '../models/parking-setting';
-
+import { COLOR_INDICATOR } from '../constants/color-indicator.const';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
-
+import { map, takeUntil, startWith } from 'rxjs/operators';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -22,52 +17,116 @@ export interface Tile {
 })
 export class AdminComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject();
-  defaultEntryPts: number = 3;
-  sizePercentage = [0.5, .1, .1];
-
-  tiles: Tile[] = [
-    {text: 'One', cols: 3, rows: 1, color: 'lightblue'},
-    {text: 'Two', cols: 1, rows: 2, color: 'lightgreen'},
-    {text: 'Three', cols: 1, rows: 1, color: 'lightpink'},
-    {text: 'Four', cols: 2, rows: 1, color: '#DDBDF1'},
-  ];
+  entrypoints: FormControl = new FormControl(3);
+  totalSlots: number = 40;
+  sizePercentage: number[] = [0.5, 0.25, 0.25];
+  clusterSlots: number[] = [];
+  sizeAllocation: number[][] = [];
+  parkingMap: EntryPoint[] = [];
 
   constructor(private dialog: MatDialog,) { }
 
   ngOnInit(): void {
-    console.log('admin ngOnInIt()');
+    this.entrypoints.valueChanges
+      .pipe(startWith(3), takeUntil(this.ngUnsubscribe))
+      .subscribe(entrance => {
+        this.clusterSlots = this.computeClusterSlots(entrance, this.totalSlots);
+        this.sizeAllocation = this.computeClusterSizes(this.clusterSlots);
+        this.parkingMap = this.createEntryPoints();
+        console.log(this.parkingMap);
+      });
   }
 
   viewCustomerList() {
     this.dialog.open(CustomerListComponent, { panelClass: 'xyz-dialog' });
   }
 
+  viewSlot(slot: ParkingSlot) {
+    this.dialog.open(SlotModalComponent, { panelClass: 'xyz-dialog', })
+  }
+
   setControls() {
     let dialogRef = this.dialog.open(ParkingSettingsComponent, {
-      data: { entryPoints: this.defaultEntryPts },
+      data: { entryPoints: this.entrypoints.value },
       panelClass: 'xyz-dialog',
       disableClose: true
     });
-
     dialogRef.afterClosed()
       .pipe(takeUntil(this.ngUnsubscribe), map(response => response.data))
-      .subscribe((response: ParkingSetting) => response ? this.defaultEntryPts = response.entries : '');
+      .subscribe((response: ParkingSetting) => response ? this.entrypoints.setValue(response.entries) : '');
   }
 
-  computeClusterSlots(entryPoints: number, slots: number) {
+  createEntryPoints(): EntryPoint[] {
+    return this.clusterSlots.map((cluster, index) => {
+      let prev = 0;
+      if(index > 0) {
+        for(let i=0; i < index; i++) {
+          prev += this.clusterSlots[index-1]
+        }
+      }
+
+      return {
+        name: 'E' + (index +1),
+        totalSlots: cluster,
+        slotSizeAllocation: this.sizeAllocation[index],
+        slots: this.assignSlots(cluster, index, prev)
+      }
+    });
+  }
+
+  assignSlots(cluster: number, index: number, prev: number): ParkingSlot[] {
+    let clusterSlots = new Array() as ParkingSlot[];
+    let counter = 0;
+
+    this.sizeAllocation[index].forEach((csize, k) => {
+      let slot = new Object() as ParkingSlot;
+      for (let i = 0; i < cluster; i++) {
+        if(csize > 0) {
+          slot = {
+            availability: true,
+            cluster: index,
+            color: COLOR_INDICATOR.available,
+            distance: counter + prev,
+            size: k,
+          }
+          csize -= 1;
+          counter += 1;
+          clusterSlots.push(slot)
+        }
+      }
+    })
+    return clusterSlots;
+  }
+
+  computeClusterSlots(entryPoints: number, slots: number): number[] {
     let clusters = new Array();
     let slotsPerCluster = Math.trunc(slots / entryPoints);
     let remainder = slots % entryPoints;
-
     for (let index = 0; index < entryPoints; index++) {
-      if (index == (entryPoints - 1)) {
-        clusters.splice(index, 0, slotsPerCluster + remainder)
-      }
-      else
-        clusters.splice(index, 0, slotsPerCluster)
+      clusters.push((index === (entryPoints - 1)) ? slotsPerCluster + remainder : slotsPerCluster);
     }
-
     return clusters;
+  }
+
+  computeClusterSizes(clusters: number[]) {
+    return clusters.map((cluster) => {
+      let arr = [];
+      let temp = 0;
+      for (let k = 0; k < this.sizePercentage.length; k++) {
+        let val = 0;
+        if (k == (this.sizePercentage.length - 1)) {
+          val = Math.round(cluster * this.sizePercentage[k]);
+          temp += val;
+          temp < cluster ? (val += (cluster - temp)) : null; //add the difference bet cluster and temp to number of large vehicles
+        }
+        else {
+          val = Math.trunc(cluster * this.sizePercentage[k]);
+          temp += val;
+        }
+        arr.push(val)
+      }
+      return arr;
+    });
   }
 
   ngOnDestroy(): void {

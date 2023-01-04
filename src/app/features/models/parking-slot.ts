@@ -1,8 +1,9 @@
+import { Vehicle } from "./vehicle"
 export interface ParkingSlot {
   availability: boolean,
-  distancePts: number[],
-  duration: number,
-  name: string,
-  size: string,
-  ticket: string,
+  cluster: number,
+  color?: string,
+  distance: number,
+  size?: number,
+  vehicle? : Vehicle
 }
