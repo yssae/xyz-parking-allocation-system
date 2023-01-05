@@ -1,7 +1,8 @@
 <div class="container">
-  <mat-tab-group mat-align-tabs="end" selectedIndex="1">
-    <mat-tab label="XYZ Parking" class="logo" labelClass="logo" disabled></mat-tab>
-    <mat-tab label="Admin" labelClass="xyz-mat-tab-label"><app-admin></app-admin></mat-tab>
-    <mat-tab label="Customer" labelClass="xyz-mat-tab-label">Overview Content</mat-tab>
-  </mat-tab-group>
+  <mat-toolbar>
+    <h1 class="toolbar-header"><mat-icon> directions_car</mat-icon>XYZ Parking Allocation System</h1>
+  </mat-toolbar>
+  <div class="main-body">
+    <app-admin></app-admin>
+  </div>
 </div>

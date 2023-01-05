@@ -4,4 +4,6 @@ export interface Vehicle {
   carSize: number,
   ticket?: string,
   owner: string
+  timeIn?: Date,
+  timeOut?: Date,
 }

@@ -1,33 +1,24 @@
 @import "_variables.scss";
 
-@import "_variables.scss";
-
 .container {
   height: 100%;
   min-height: 100vh;
   background-color: #F7F7F7;
 
+  .toolbar-header {
+    letter-spacing: 2px;
+    font: 500 20px/24px $special-font;
+    mat-icon {
+      padding: 4px 0;
+    }
+  }
+
   ::ng-deep {
-    .mat-tab-header {
-      background-color: $color-primary;
-    }
-    .xyz-mat-tab-label {
-      color: $font-color-secondary;
-    }
-
-    #mat-tab-label-0-0 {
-      width: 82%;
+    mat-toolbar {
       padding: 0 25px;
-      display: flex;
-      justify-content: start;
-      opacity: 1;
+      color: $font-color-secondary;
+      background-color: $color-primary;
 
-      .mat-tab-label-content {
-        color: #fff;
-        opacity: 1;
-        letter-spacing: 2px;
-        font: 500 20px/24px $special-font;
-      }
     }
   }
 }
