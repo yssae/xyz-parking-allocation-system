@@ -8,15 +8,16 @@
   display: flex;
   align-items: center;
   font: 400 16px/20px $primary-font;
+  justify-content: space-between;
 
   label {
-    width: 20%;
+    //width: 20%;
     min-width: 200px;
     text-align: left;
   }
 
   .field-input {
-    width: 100%;
+    //width: 100%;
     margin: 5px 0;
     display: flex;
     flex-direction: column;

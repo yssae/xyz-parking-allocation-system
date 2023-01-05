@@ -26,8 +26,6 @@ import { CustomerComponent } from './customer/customer.component';
   ],
   exports: [
     AdminComponent,
-    ParkingSettingsComponent,
-    CustomerListComponent
   ]
 })
 export class FeaturesModule { }

@@ -1,4 +1,4 @@
-@import "_variables";
+@import "_variables.scss";
 
 * {
   padding: 0;
@@ -23,6 +23,18 @@ body {
   }
 }
 
+.section-header {
+  font: 500 20px/24px $special-font;
+}
+
+.xyz-body-1 {
+  font: 500 16px/20px $primary-font;
+}
+
+.xyz-body-2 {
+  font: 500 18px/22px $primary-font;
+}
+
 .xyz-dialog {
   .mat-dialog-container {
     padding: 15px;
@@ -30,6 +42,10 @@ body {
   }
   .semi-rounded-edge {
     border-radius: 15px !important;
+  }
+  .reset-dialog {
+    padding: 0;
+    border-radius: 0;
   }
 }
 
@@ -44,3 +60,10 @@ body {
 .right-aligned {
   text-align: center;
 }
+.demibold-text {
+  font-weight: 500;
+}
+
+
+
+

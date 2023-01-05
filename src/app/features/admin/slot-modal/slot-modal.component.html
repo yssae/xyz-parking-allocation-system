@@ -1,0 +1,30 @@
+<div class="container">
+  <div class="header">
+    <h2 mat-dialog-title class="section-header">Parking Slot Information</h2>
+    <button mat-dialog-close><mat-icon>close</mat-icon></button>
+  </div>
+  <hr>
+  <mat-dialog-content>
+    <form>
+      <div class="slot-primary-details">
+        <p class="xyz-body-2">Primary Slot Details</p>
+        <xyz-input fieldLabel="Slot Number" [control]="parkingSlot.get('distance')"></xyz-input>
+        <xyz-input fieldLabel="Cluster" [control]="parkingSlot.get('cluster')"></xyz-input>
+        <xyz-input fieldLabel="Slot Size" [control]="parkingSlot.get('size')"></xyz-input>
+        <xyz-input fieldLabel="Availability" [control]="parkingSlot.get('availability')"></xyz-input>
+      </div>
+      <div *ngIf="this.car" class="customer-details">
+        <hr><br>
+        <p class="xyz-body-2">Customer Details</p>
+        <xyz-input fieldLabel="Ticket" [control]="vehicle.get('ticket')"></xyz-input>
+        <xyz-input fieldLabel="Customer" [control]="vehicle.get('owner')"></xyz-input>
+        <xyz-input fieldLabel="Plate Number" [control]="vehicle.get('plateNumber')"></xyz-input>
+        <xyz-input fieldLabel="Vehicle Size" [control]="vehicle.get('carSize')"></xyz-input>
+        <xyz-input fieldLabel="Duration" [control]="vehicle.get('duration')"></xyz-input>
+        <div class="cta-button">
+          <button class="xyz-body normal">Unpark Vehicle</button>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

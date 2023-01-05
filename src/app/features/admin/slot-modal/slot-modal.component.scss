@@ -1,0 +1,49 @@
+@import "_variables.scss";
+
+.container {
+  padding: 10px 15px;
+  .header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    h2 {
+      font: 500 24px/28px;
+    }
+
+    button {
+      justify-self: right;
+      height: fit-content;
+      border-radius: 5px;
+      border: transparent;
+      outline: transparent;
+      background: #FAFAFA;
+    }
+  }
+
+  mat-dialog-content {
+    width: auto;
+    padding: 0;
+    margin: 20px auto;
+
+    .slot-primary-details,
+    .customer-details {
+      padding: 0 5px;
+    }
+
+    .cta-button {
+      text-align: center;
+      button {
+        margin: 7px auto 0;
+        text-align: center;
+        padding: 7px 10px;
+        border-radius: 5px;
+        font: 400 16px/20px $primary-font;
+        color: $font-color-secondary;
+        background-color: $color-primary;
+        border: 0.5px solid #ccc;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.05);
+      }
+    }
+  }
+}

@@ -10,6 +10,7 @@ import { ParkingSetting } from '../models/parking-setting';
 import { COLOR_INDICATOR } from '../constants/color-indicator.const';
 import { Subject } from 'rxjs';
 import { map, takeUntil, startWith } from 'rxjs/operators';
+import { Vehicle } from '../models/vehicle';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -42,7 +43,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   viewSlot(slot: ParkingSlot) {
-    this.dialog.open(SlotModalComponent, { panelClass: 'xyz-dialog', })
+    this.dialog.open(SlotModalComponent, { data: { slotData: slot }})
   }
 
   setControls() {

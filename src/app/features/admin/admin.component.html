@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="admin-body">
-      <mat-grid-list cols="10" rowHeight="120px">
+      <mat-grid-list cols="8" rowHeight="120px">
         <ng-container *ngFor="let cluster of parkingMap; let i = index">
           <ng-container *ngFor="let slot of cluster.slots">
             <mat-grid-tile colspan="1" rowspan="1" [style.background]="slot.color" (click)="viewSlot(slot)">

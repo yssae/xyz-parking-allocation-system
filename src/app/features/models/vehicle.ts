@@ -1,6 +1,7 @@
 export interface Vehicle {
   duration: number,
   plateNumber: string,
-  size: string,
+  carSize: number,
   ticket?: string,
+  owner: string
 }
