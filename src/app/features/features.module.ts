@@ -8,12 +8,14 @@ import { AdminComponent } from './admin/admin.component';
 import { ParkingSettingsComponent } from './admin/parking-settings/parking-settings.component';
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { SlotModalComponent } from './admin/slot-modal/slot-modal.component';
+import { CustomerComponent } from './admin/customer/customer.component';
 @NgModule({
   declarations: [
     AdminComponent,
     ParkingSettingsComponent,
     CustomerListComponent,
-    SlotModalComponent
+    SlotModalComponent,
+    CustomerComponent
   ],
   imports: [
     CommonModule,

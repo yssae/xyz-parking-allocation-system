@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ParkingSettingsComponent } from './parking-settings/parking-settings.component';
 import { CustomerListComponent } from './customer-list/customer-list.component';
 import { SlotModalComponent } from './slot-modal/slot-modal.component';
-import { EntryPoint } from '../models/entry-point';
-import { ParkingSlot } from '../models/parking-slot';
-import { ParkingSetting } from '../models/parking-setting';
+import { CustomerComponent } from './customer/customer.component';
 import { COLOR_INDICATOR } from '../constants/color-indicator.const';
-import { Subject } from 'rxjs';
-import { map, takeUntil, startWith } from 'rxjs/operators';
+import { EntryPoint } from '../models/entry-point';
+import { ParkingSetting } from '../models/parking-setting';
+import { ParkingSlot } from '../models/parking-slot';
 import { Vehicle } from '../models/vehicle';
+import { map, takeUntil, startWith } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -24,6 +26,13 @@ export class AdminComponent implements OnInit, OnDestroy {
   clusterSlots: number[] = [];
   sizeAllocation: number[][] = [];
   parkingMap: EntryPoint[] = [];
+  vehicle = {
+    duration: 4,
+    plateNumber: 'YSA4885',
+    carSize: 0,
+    ticket: "XYZ001",
+    owner: "Hunter Small Four"
+  }
 
   constructor(private dialog: MatDialog,) { }
 
@@ -38,12 +47,16 @@ export class AdminComponent implements OnInit, OnDestroy {
       });
   }
 
+  addCustomer() {
+    this.dialog.open(CustomerComponent, { data: { entrypoints: this.entrypoints.value } })
+  }
+
   viewCustomerList() {
     this.dialog.open(CustomerListComponent, { panelClass: 'xyz-dialog' });
   }
 
   viewSlot(slot: ParkingSlot) {
-    this.dialog.open(SlotModalComponent, { data: { slotData: slot }})
+    this.dialog.open(SlotModalComponent, { data: { slotData: slot } })
   }
 
   setControls() {
@@ -60,17 +73,17 @@ export class AdminComponent implements OnInit, OnDestroy {
   createEntryPoints(): EntryPoint[] {
     return this.clusterSlots.map((cluster, index) => {
       let prev = 0;
-      if(index > 0) {
-        for(let i=0; i < index; i++) {
-          prev += this.clusterSlots[index-1]
+      if (index > 0) {
+        for (let i = 0; i < index; i++) {
+          prev += this.clusterSlots[index - 1]
         }
       }
 
       return {
-        name: 'E' + (index +1),
+        name: 'E' + (index + 1),
         totalSlots: cluster,
         slotSizeAllocation: this.sizeAllocation[index],
-        slots: this.assignSlots(cluster, index, prev)
+        slots: this.assignSlots(cluster, index, prev),
       }
     });
   }
@@ -82,7 +95,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.sizeAllocation[index].forEach((csize, k) => {
       let slot = new Object() as ParkingSlot;
       for (let i = 0; i < cluster; i++) {
-        if(csize > 0) {
+        if (csize > 0) {
           slot = {
             availability: true,
             cluster: index,
@@ -92,7 +105,7 @@ export class AdminComponent implements OnInit, OnDestroy {
           }
           csize -= 1;
           counter += 1;
-          clusterSlots.push(slot)
+          clusterSlots.push(slot);
         }
       }
     })

@@ -6,4 +6,5 @@ export interface Vehicle {
   owner: string
   timeIn?: Date,
   timeOut?: Date,
+  cluster?: number
 }

@@ -1,0 +1,14 @@
+<div class="container">
+  <div class="dropdown-wrapper">
+    <label> {{ fieldLabel }} </label>
+    <mat-form-field appearance="outline" floatLabel="never">
+      <mat-select [formControl]="control">
+        <mat-option *ngFor="let option of options" [value]="option">
+          {{ option.name | titlecase }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <ng-content></ng-content>
+</div>
+
