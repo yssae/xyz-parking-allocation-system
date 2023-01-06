@@ -1,4 +1,7 @@
 export interface ParkingSetting {
   entries: number,
-  tolalSlots?: number
+  totalSlots: number,
+  smallSlots: number,
+  mediumSlots: number,
+  largeSlots: number
 }

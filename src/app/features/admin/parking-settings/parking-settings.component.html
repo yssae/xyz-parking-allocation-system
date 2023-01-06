@@ -1,11 +1,25 @@
 <form [formGroup]="settingsForm">
   <h2 mat-dialog-title>Parking Slot Settings</h2><br>
   <mat-dialog-content>
-    <xyz-input fieldLabel="Total Slots" value="40" [control]="settingsForm.get('totalSlots')" [disabled]="true"></xyz-input>
     <xyz-input fieldLabel="Number of Entry Points" [control]="settingsForm.get('entries')">
       <ng-container *ngIf="f['entries'].errors">
         <p class="xyz-field-error right-aligned" *ngIf="f['entries'].errors?.['required']">Field is required.</p>
         <p class="xyz-field-error right-aligned" *ngIf="f['entries'].errors?.['min']">Minimun entry points is 3.</p>
+      </ng-container>
+    </xyz-input>
+    <xyz-input fieldLabel="Small Vehicle Slots"  inputType="number" [control]="settingsForm.get('smallSlots')">
+      <ng-container *ngIf="f['smallSlots'].errors?.['required']">
+        <p class="xyz-field-error right-aligned">Field is required.</p>
+      </ng-container>
+    </xyz-input>
+    <xyz-input fieldLabel="Medium Vehicle Slots"  inputType="number" [control]="settingsForm.get('mediumSlots')">
+      <ng-container *ngIf="f['mediumSlots'].errors?.['required']">
+        <p class="xyz-field-error right-aligned">Field is required.</p>
+      </ng-container>
+    </xyz-input>
+    <xyz-input fieldLabel="Large Vehicle Slots"  inputType="number" [control]="settingsForm.get('largeSlots')">
+      <ng-container *ngIf="f['largeSlots'].errors?.['required']">
+        <p class="xyz-field-error right-aligned">Field is required.</p>
       </ng-container>
     </xyz-input>
   </mat-dialog-content>

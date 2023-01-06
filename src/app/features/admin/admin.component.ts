@@ -10,7 +10,7 @@ import { EntryPoint } from '../models/entry-point';
 import { ParkingSetting } from '../models/parking-setting';
 import { ParkingSlot } from '../models/parking-slot';
 import { Vehicle } from '../models/vehicle';
-import { map, takeUntil, startWith } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { ParkingMapService } from '../services/parking-map.service';
@@ -23,7 +23,9 @@ import { ParkingMapService } from '../services/parking-map.service';
 export class AdminComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject();
   entrypoints: FormControl = new FormControl(3);
+  sizesOfSlots: number[] = [19, 9, 12];
   totalSlots: number = 40;
+
   clusterSlots: number[] = [];
   sizeAllocation: number[][] = [];
   parkingMap: EntryPoint[] = [];
@@ -40,14 +42,13 @@ export class AdminComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,) { }
 
   ngOnInit(): void {
-    this.entrypoints.valueChanges
-      .pipe(startWith(3), takeUntil(this.ngUnsubscribe))
-      .subscribe(entrance => {
-        this.clusterSlots = this.mapService.computeClusterSlots(entrance, this.totalSlots);
-        this.sizeAllocation = this.mapService.computeClusterSizes(this.clusterSlots);
-        this.parkingMap = this.mapService.createEntryPoints(this.clusterSlots, this.sizeAllocation);
-        console.log(this.parkingMap);
-      });
+    this.constructParkingMap();
+  }
+
+  constructParkingMap() {
+    this.clusterSlots = this.mapService.computeClusterSlots(this.entrypoints.value, this.totalSlots);
+    this.sizeAllocation = this.mapService.computeClusterSizes(this.clusterSlots);
+    this.parkingMap = this.mapService.createEntryPoints(this.clusterSlots, this.sizeAllocation);
   }
 
   addCustomer() {
@@ -63,10 +64,31 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   setControls() {
-    let dialogRef = this.dialog.open(ParkingSettingsComponent, { data: { entryPoints: this.entrypoints.value }, panelClass: 'xyz-dialog', disableClose: true });
+    let dialogRef = this.dialog.open(ParkingSettingsComponent, {
+      panelClass: 'xyz-dialog', disableClose: true,
+      data: {
+        entryPoints: this.entrypoints.value,
+        totalSlots: this.totalSlots,
+        sizesOfSlots: this.sizesOfSlots
+      }
+    });
+
     dialogRef.afterClosed()
       .pipe(takeUntil(this.ngUnsubscribe), map(response => response.data))
-      .subscribe((response: ParkingSetting) => response ? this.entrypoints.setValue(response.entries) : '');
+      .subscribe((data: ParkingSetting) => {
+        if(!data){
+          return
+        }
+        this.totalSlots = data.totalSlots;
+        let tempSize = [data.smallSlots, data.mediumSlots, data.largeSlots]
+        this.updateSizesOfSlots(tempSize);
+        this.entrypoints.setValue(data.entries);
+        this.constructParkingMap();
+      });
+  }
+
+  updateSizesOfSlots(value: number[]) {
+    value ? this.sizesOfSlots.map((size, index) => this.sizesOfSlots.splice(index, 1, (+value[index]))) : [];
   }
 
   ngOnDestroy(): void {
