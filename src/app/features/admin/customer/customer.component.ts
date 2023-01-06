@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Vehicle } from '../../models/vehicle';
 import { VEHICLE_SIZE } from '../../constants/vehicle-size.const';
-
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -42,6 +41,11 @@ export class CustomerComponent implements OnInit {
   save(formData: any) {
     console.log('SAVE')
     this.submitted = true;
+    if(this.vehicleForm.invalid) {
+      return;
+    }
+
+
     console.log(formData)
   }
 
@@ -49,7 +53,7 @@ export class CustomerComponent implements OnInit {
     let optionsArray = new Array();
     for(let index=0; index<entrypoints; index++) {
       optionsArray.push({
-        name: "E" + index,
+        name: "E" + (index+1),
         value: index
       })
     }

@@ -7,11 +7,12 @@
   }
 
   table {
-    text-align: left;
     margin: auto;
 
-    td {
+    th, td {
+      padding: 0 20px;
       width: 200px;
     }
+
   }
 }
