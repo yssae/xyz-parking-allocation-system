@@ -27,8 +27,7 @@ export class SlotModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) private data: any,) {
 
     this.slot = this.data.slotData;
-    this.car = this.data.slotData.vehicle;
-
+    this.car = this.data.slotData?.vehicle;
     this.parkingSlot = this.fb.group({
       availability: this.slot.availability,
       cluster: this.slot.cluster,

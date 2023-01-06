@@ -52,7 +52,10 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   viewCustomerList() {
-    this.dialog.open(CustomerListComponent, { panelClass: 'xyz-dialog' });
+    this.dialog.open(CustomerListComponent, {
+      panelClass: 'xyz-dialog',
+      data: { entrypoints: this.entrypoints.value }
+    });
   }
 
   viewSlot(slot: ParkingSlot) {
@@ -102,6 +105,7 @@ export class AdminComponent implements OnInit, OnDestroy {
             color: COLOR_INDICATOR.available,
             distance: counter + prev,
             size: k,
+            vehicle: this.vehicle
           }
           csize -= 1;
           counter += 1;

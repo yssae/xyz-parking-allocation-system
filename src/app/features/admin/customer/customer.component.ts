@@ -13,15 +13,13 @@ export class CustomerComponent implements OnInit {
   car = new Object() as Vehicle;
   carSizeOptions = VEHICLE_SIZE;
   vehicleForm: FormGroup;
-  entrypoints: number;
+  entrypoints: number = 3;
   options: number[] = [];
   submitted: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) private data: any,) {
-
-    this.entrypoints = this.data.entrypoints;
     this.vehicleForm = this.fb.group({
       cluster: ['', Validators.required],
       carSize: ['', Validators.required],
@@ -35,7 +33,10 @@ export class CustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.options = this.createEntryOptions(this.entrypoints)
+    this.car = this.data.slotData?.vehicle;
+    this.entrypoints = this.data.entrypoints;
+    this.options = this.createEntryOptions(this.entrypoints);
+    this.mapVehicleData(this.car)
   }
 
   save(formData: any) {
@@ -43,8 +44,6 @@ export class CustomerComponent implements OnInit {
     this.submitted = true;
     console.log(formData)
   }
-
-  mapFormData() {}
 
   createEntryOptions(entrypoints: number): number[] {
     let optionsArray = new Array();
@@ -55,6 +54,12 @@ export class CustomerComponent implements OnInit {
       })
     }
     return optionsArray;
+  }
+
+  mapVehicleData(vehicle: Vehicle) {
+    if(vehicle) {
+      this.vehicleForm.patchValue(vehicle);
+    }
   }
 
   get f() {

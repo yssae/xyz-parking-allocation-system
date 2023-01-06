@@ -1,0 +1,17 @@
+.container {
+  //width: 100%;
+  padding: 1em 2em;
+
+  .list-header {
+    text-align: center;
+  }
+
+  table {
+    text-align: left;
+    margin: auto;
+
+    td {
+      width: 200px;
+    }
+  }
+}
