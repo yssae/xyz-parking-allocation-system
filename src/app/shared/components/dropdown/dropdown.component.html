@@ -3,7 +3,7 @@
     <label> {{ fieldLabel }} </label>
     <mat-form-field appearance="outline" floatLabel="never">
       <mat-select [formControl]="control">
-        <mat-option *ngFor="let option of options" [value]="option">
+        <mat-option *ngFor="let option of options" [value]="option.value">
           {{ option.name | titlecase }}
         </mat-option>
       </mat-select>

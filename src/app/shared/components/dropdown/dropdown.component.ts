@@ -10,7 +10,7 @@ export class DropdownComponent implements OnInit {
 
   @Input() icon = '';
   @Input() disabled = false;
-  @Input() fieldLabel = 'Label';
+  @Input() fieldLabel = '';
   @Input() fieldName = '';
   @Input() placeholder = '';
   @Input() value = '';
@@ -21,6 +21,6 @@ export class DropdownComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.control.patchValue(this.options[0]);
+    this.control.patchValue(this.options[0].value);
   }
 }

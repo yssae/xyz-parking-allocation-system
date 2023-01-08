@@ -4,6 +4,7 @@
   height: 100%;
   min-height: 100vh;
   background-color: #F7F7F7;
+  box-sizing: border-box;
 
   .toolbar-header {
     letter-spacing: 2px;
@@ -12,13 +13,11 @@
       padding: 4px 0;
     }
   }
-
   ::ng-deep {
     mat-toolbar {
       padding: 0 25px;
       color: $font-color-secondary;
       background-color: $color-primary;
-
     }
   }
 }

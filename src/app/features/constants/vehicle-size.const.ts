@@ -1,4 +1,5 @@
-export const VEHICLE_SIZE = [
+import { VehicleSize } from "../models/vehicle-size"
+export const VEHICLE_SIZE: VehicleSize[] = [
   {
     name: 'small',
     value: 0

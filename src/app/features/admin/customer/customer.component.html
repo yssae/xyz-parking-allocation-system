@@ -1,32 +1,29 @@
 <form [formGroup]="vehicleForm" class="container">
   <p class="xyz-body-2">Customer Details</p>
   <hr><br>
-  <xyz-dropdown fieldLabel="Entrance" [control]="vehicleForm.get('cluster')" [options]="options">
+  <xyz-dropdown fieldLabel="Entrance" [control]="vehicleForm.get('cluster')" [options]="entryOptions">
     <ng-container *ngIf="f['cluster'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['cluster'].errors?.['required']">Field is required.</p>
     </ng-container>
   </xyz-dropdown>
-
   <xyz-input fieldLabel="Customer Name" [control]="vehicleForm.get('owner')">
     <ng-container *ngIf="f['owner'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['owner'].errors?.['required']">Field is required.</p>
     </ng-container>
   </xyz-input>
-
   <xyz-input fieldLabel="Plate Number" [control]="vehicleForm.get('plateNumber')">
     <ng-container *ngIf="f['plateNumber'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['plateNumber'].errors?.['required']">Field is required.</p>
     </ng-container>
   </xyz-input>
-
-  <xyz-dropdown fieldLabel="Vehicle Size" fieldName="vehicleSize" [control]="vehicleForm.get('carSize')" [options]="carSizeOptions">
+  <xyz-dropdown fieldLabel="Vehicle Size" fieldName="vehicleSize" [control]="vehicleForm.get('carSize')"
+    [options]="carSizeOptions">
     <ng-container *ngIf="f['carSize'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['carSize'].errors?.['required']">Field is required.</p>
     </ng-container>
   </xyz-dropdown>
-
   <div class="cta-button">
-    <button class="xyz-body normal" (click)="save(vehicleForm.value)">Save</button>
+    <button class="xyz-body normal" (click)="save()">Save</button>
     <button class="xyz-body normal" mat-dialog-close>Cancel</button>
   </div>
 </form>

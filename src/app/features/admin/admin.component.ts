@@ -6,15 +6,16 @@ import { CustomerListComponent } from './customer-list/customer-list.component';
 import { SlotModalComponent } from './slot-modal/slot-modal.component';
 import { CustomerComponent } from './customer/customer.component';
 import { COLOR_INDICATOR } from '../constants/color-indicator.const';
+import { PARKING_RATES } from '../constants/parking-rates.const';
+import { VEHICLE_SIZE } from '../constants/vehicle-size.const';
 import { EntryPoint } from '../models/entry-point';
 import { ParkingSetting } from '../models/parking-setting';
 import { ParkingSlot } from '../models/parking-slot';
 import { Vehicle } from '../models/vehicle';
+import { customers } from 'src/app/mock/constants/customers.const';
+import { ParkingMapService } from '../services/parking-map.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-
-import { ParkingMapService } from '../services/parking-map.service';
-
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -23,40 +24,116 @@ import { ParkingMapService } from '../services/parking-map.service';
 export class AdminComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject();
   entrypoints: FormControl = new FormControl(3);
-  sizesOfSlots: number[] = [19, 9, 12];
-  totalSlots: number = 40;
-
   clusterSlots: number[] = [];
-  sizeAllocation: number[][] = [];
   parkingMap: EntryPoint[] = [];
-  vehicle = {
-    duration: 4,
-    plateNumber: 'YSA4885',
-    carSize: 0,
-    ticket: "XYZ001",
-    owner: "Hunter Small Four"
-  }
+  customerList: Vehicle[] = [];
+  sizeAllocation: number[][] = [];
+  sizePercentage: number[] = [];
+  sizesOfSlots: number[] = [20, 10, 10];
+  totalSlots: number = 40;
+  ticketList: number[] = [];
 
   constructor(
-    private mapService: ParkingMapService,
+    private parkingService: ParkingMapService,
     private dialog: MatDialog,) { }
 
   ngOnInit(): void {
     this.constructParkingMap();
+    this.createCustomerList();
+    this.createTickets();
   }
 
   constructParkingMap() {
-    this.clusterSlots = this.mapService.computeClusterSlots(this.entrypoints.value, this.totalSlots);
-    this.sizeAllocation = this.mapService.computeClusterSizes(this.clusterSlots);
-    this.parkingMap = this.mapService.createEntryPoints(this.clusterSlots, this.sizeAllocation);
+    this.sizePercentage = this.parkingService.computeSizePercent(this.totalSlots,this.sizesOfSlots);
+    this.sizeAllocation = this.parkingService.computeSizesPerCluster(this.sizesOfSlots, this.entrypoints.value);
+    this.clusterSlots = this.parkingService.computeClusterSlots(this.sizeAllocation);
+    this.parkingMap = this.parkingService.createEntryPoints(this.clusterSlots, this.sizeAllocation);
+    console.log(this.parkingMap)
+  }
+
+  createCustomerList() {
+    this.parkingService.customerList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(customer => {
+      this.updateCustomerRecords(customer);
+      console.log('MASTERLIST', this.customerList)
+    });
+  }
+
+  updateCustomerRecords(customer: Vehicle) {
+    let hasDuplicate = false;
+    this.customerList.forEach((record, index) => {
+      if(record.ticket == customer.ticket && record.plateNumber == customer.plateNumber) {
+        hasDuplicate = true;
+        index = index;
+        this.customerList.splice(index, 0, customer);
+      }
+    });
+    !hasDuplicate ? this.customerList.push(customer) : '';
+    this.assignVehicleSlot(customer);
+  }
+
+  assignVehicleSlot(vehicle: Vehicle) {
+    let slot = new Object() as ParkingSlot | any;
+    this.clusters.forEach(cluster => {
+      if(vehicle.cluster == cluster) {
+        slot = this.parkingMap[cluster].slots?.find(slot => (slot.size >= vehicle.carSize) && slot.availability);
+      }
+      if(!slot && !slot?.availability) {
+        slot = this.compareMedian(vehicle)
+      }
+    });
+    if(slot) {
+      let index = this.parkingMap[slot.cluster].slots.findIndex(record => record.distance == slot.distance);
+      this.parkingMap[slot.cluster].slots[index].availability = false;
+      this.parkingMap[slot.cluster].slots[index].color = COLOR_INDICATOR.occupied;
+      this.parkingMap[slot.cluster].slots[index].vehicle = vehicle;
+    }
+    else {
+      // snackbar or dialog
+    }
+  }
+
+  compareMedian(vehicle: Vehicle): ParkingSlot {
+    let clusterMedian = this.parkingMap.find((cluster, index) => index == vehicle.cluster ? cluster.median : 0);
+    let smallestValue = this.totalSlots;
+    let nearestSlot = new Object() as ParkingSlot;
+    this.parkingMap.forEach((cluster) => {
+      let slots = cluster.slots.filter(slot => (slot.size >= vehicle.carSize) && slot.availability)
+      slots.forEach(slot => {
+        if(slot && clusterMedian) {
+          let value = Math.abs(clusterMedian.median - slot?.distance);
+          if(value < smallestValue) {
+            smallestValue = value;
+            nearestSlot = slot;
+          }
+        }
+      })
+    })
+    return nearestSlot;
+  }
+
+  createTickets() {
+    this.parkingService.ticketList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(ticket => this.ticketList.push(ticket))
   }
 
   addCustomer() {
-    this.dialog.open(CustomerComponent, { data: { entrypoints: this.entrypoints.value } })
+    let dialogRef = this.dialog.open(CustomerComponent, {
+      data: {
+        entrypoints: this.entrypoints.value,
+        customers: this.customerList
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((customer: Vehicle) => this.parkingService.parkVehicle(customer));
   }
 
   viewCustomerList() {
-    this.dialog.open(CustomerListComponent, { data: { entrypoints: this.entrypoints.value }, panelClass: 'xyz-dialog' });
+    this.dialog.open(CustomerListComponent, {
+      panelClass: 'xyz-dialog',
+      data: {
+        entrypoints: this.entrypoints.value,
+        customers: this.customerList
+      },
+    });
   }
 
   viewSlot(slot: ParkingSlot) {
@@ -89,6 +166,10 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   updateSizesOfSlots(value: number[]) {
     value ? this.sizesOfSlots.map((size, index) => this.sizesOfSlots.splice(index, 1, (+value[index]))) : [];
+  }
+
+  get clusters() {
+    return this.parkingMap.map((cluster, index) => index);
   }
 
   ngOnDestroy(): void {

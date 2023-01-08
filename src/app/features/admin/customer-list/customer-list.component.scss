@@ -1,18 +1,23 @@
 .container {
-  //width: 100%;
+  min-height: 600px;
+  position: relative;
   padding: 1em 2em;
-
+  box-sizing: border-box;
   .list-header {
     text-align: center;
   }
 
   table {
     margin: auto;
-
     th, td {
       padding: 0 20px;
       width: 200px;
     }
+  }
 
+  mat-paginator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
   }
 }

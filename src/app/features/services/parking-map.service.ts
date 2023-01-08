@@ -2,29 +2,42 @@ import { Injectable } from '@angular/core';
 import { COLOR_INDICATOR } from '../constants/color-indicator.const';
 import { ParkingSlot } from '../models/parking-slot';
 import { EntryPoint } from '../models/entry-point';
-import { Subject } from 'rxjs';
-
+import { Subject, BehaviorSubject, ReplaySubject } from 'rxjs';
+import { Vehicle } from '../models/vehicle';
 @Injectable({
   providedIn: 'root'
 })
 export class ParkingMapService {
-  parkingMap = new Subject();
-  sizePercentage: number[] = [0.5, 0.25, 0.25];
+  parkingMap = new Subject<ParkingSlot>();
+  ticketList = new BehaviorSubject<number>(0);
+  customerList = new Subject<Vehicle>();
+  sizePercentage: number[] = [];
 
   constructor() { }
+
+  generateTicket() {
+    this.ticketList.next(this.ticketList.getValue() + 1);
+  }
+
+  computeSizePercent(total: number, sizes: number[]) {
+    this.sizePercentage = sizes.map(size => (size / total));
+    return sizes.map(size => (size / total))
+  }
 
   createEntryPoints(clusterSlots: number[], sizeAlloc: number[][]): EntryPoint[] {
     return clusterSlots.map((cluster, index) => {
       let prev = 0;
+      let counter = cluster;
       if (index > 0) {
         for (let i = 0; i < index; i++) {
-          prev += clusterSlots[index - 1]
+          prev += clusterSlots[index - 1];
+          counter += clusterSlots[index - 1]; // last number
         }
       }
-
       return {
         name: 'E' + (index + 1),
         totalSlots: cluster,
+        median: (prev + (counter - 1)) / 2,
         slotSizeAllocation: sizeAlloc[index],
         slots: this.assignSlots(cluster, index, prev, sizeAlloc[index]),
       }
@@ -55,34 +68,36 @@ export class ParkingMapService {
     return clusterSlots;
   }
 
-  computeClusterSlots(entryPoints: number, slots: number): number[] {
-    let clusters = new Array();
-    let slotsPerCluster = Math.trunc(slots / entryPoints);
-    let remainder = slots % entryPoints;
-    for (let index = 0; index < entryPoints; index++) {
-      clusters.push((index === (entryPoints - 1)) ? slotsPerCluster + remainder : slotsPerCluster);
-    }
-    return clusters;
-  }
-
-  computeClusterSizes(clusters: number[]): number[][] {
-    return clusters.map((cluster) => {
-      let arr = [];
-      let temp = 0;
-      for (let k = 0; k < this.sizePercentage.length; k++) {
-        let val = 0;
-        if (k == (this.sizePercentage.length - 1)) {
-          val = Math.round(cluster * this.sizePercentage[k]);
-          temp += val;
-          temp < cluster ? (val += (cluster - temp)) : null; //add the difference bet cluster and temp to number of large vehicles
-        }
-        else {
-          val = Math.trunc(cluster * this.sizePercentage[k]);
-          temp += val;
-        }
-        arr.push(val)
+  computeClusterSlots(sizeAllocation: number[][]): number[] {
+    return sizeAllocation.map((size) => {
+      let total = 0;
+      for (let k = 0; k < size.length; k++) {
+        total += size[k];
       }
-      return arr;
+      return total;
     });
   }
+
+  computeSizesPerCluster(sizes: number[], entrypts: number): number[][] {
+    let temp = [];
+    for (let index = 0; index < entrypts; index++) {
+      temp.push(sizes.map((size) => index == (entrypts - 1) ? Math.trunc(size / entrypts) + (size % entrypts) : Math.trunc(size / entrypts)));
+    }
+    return temp;
+  }
+
+  isEligibleForContinuousRate(vehicle: Vehicle) {}
+
+  parkVehicle(vehicle: Vehicle) {
+    if(vehicle) {
+      this.customerList.next(vehicle);
+    }
+  }
+
+  unparkVehicle() {}
+
+  get customers() {
+    return this.customerList;
+  }
+
 }
