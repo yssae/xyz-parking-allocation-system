@@ -1,11 +1,11 @@
 <div class="container">
   <div class="header">
     <h2 mat-dialog-title class="section-header">Parking Slot Information</h2>
-    <button mat-dialog-close><mat-icon>close</mat-icon></button>
+    <button [mat-dialog-close]="false"><mat-icon>close</mat-icon></button>
   </div>
   <hr>
   <mat-dialog-content>
-    <form>
+    <form [formGroup]="parkingSlot">
       <div class="slot-primary-details">
         <p class="xyz-body-2">Primary Slot Details</p>
         <xyz-input fieldLabel="Slot Number" [control]="parkingSlot.get('distance')"></xyz-input>
@@ -22,7 +22,7 @@
         <xyz-input fieldLabel="Vehicle Size" [control]="vehicle.get('carSize')"></xyz-input>
         <xyz-input fieldLabel="Duration" [control]="vehicle.get('duration')"></xyz-input>
         <div class="cta-button">
-          <button class="xyz-body normal">Unpark Vehicle</button>
+          <button class="xyz-body normal" (click)="unpark()">Unpark</button>
         </div>
       </div>
     </form>

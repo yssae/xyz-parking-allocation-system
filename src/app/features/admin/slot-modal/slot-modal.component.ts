@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ParkingSlot } from '../../models/parking-slot';
 import { Vehicle } from '../../models/vehicle';
 
@@ -13,19 +13,19 @@ export class SlotModalComponent implements OnInit {
   slot = new Object() as ParkingSlot;
   car = new Object() as Vehicle;
   parkingSlot: FormGroup;
+
   vehicle: FormGroup = this.fb.group({
     carSize: '',
     duration: '',
     plateNumber: '',
     ticket: '',
-    owner: ''
+    owner: '',
   });
 
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<SlotModalComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any,) {
-
     this.slot = this.data.slotData;
     this.car = this.data.slotData?.vehicle;
     this.parkingSlot = this.fb.group({
@@ -39,11 +39,10 @@ export class SlotModalComponent implements OnInit {
 
   ngOnInit(): void {
     this.mapVehicleData(this.car);
-    console.log(this.parkingSlot)
   }
 
   mapVehicleData(vehicle: Vehicle) {
-    if(vehicle) {
+    if (vehicle) {
       this.vehicle.patchValue({
         carSize: vehicle.carSize,
         duration: vehicle.duration,
@@ -54,5 +53,8 @@ export class SlotModalComponent implements OnInit {
     }
   }
 
-  unpark() {}
+  unpark() {
+    this.dialogRef.close(true);
+  }
+
 }
