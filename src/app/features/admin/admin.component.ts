@@ -16,6 +16,8 @@ import { customers } from 'src/app/mock/constants/customers.const';
 import { ParkingMapService } from '../services/parking-map.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import * as moment from 'moment-timezone';
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -32,6 +34,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   sizesOfSlots: number[] = [20, 10, 10];
   totalSlots: number = 40;
   ticketList: number[] = [];
+  baseTime: Date = new Date();
 
   constructor(
     private parkingService: ParkingMapService,
@@ -41,6 +44,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.constructParkingMap();
     this.createCustomerList();
     this.createTickets();
+    this.getBaseTime();
+  }
+
+  getBaseTime() {
+    this.parkingService.baseTime.subscribe(time => {
+      this.baseTime = time;
+      console.log('TEST', this.baseTime)
+    })
   }
 
   constructParkingMap() {
@@ -53,6 +64,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   createCustomerList() {
     this.parkingService.customerList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(customer => {
+      console.log(customer)
       this.updateCustomerRecords(customer);
       console.log('MASTERLIST', this.customerList)
     });
@@ -119,11 +131,14 @@ export class AdminComponent implements OnInit, OnDestroy {
     let dialogRef = this.dialog.open(CustomerComponent, {
       data: {
         entrypoints: this.entrypoints.value,
-        customers: this.customerList
+        customers: this.customerList,
+        baseTime: this.baseTime
       }
     });
 
-    dialogRef.afterClosed().subscribe((customer: Vehicle) => this.parkingService.parkVehicle(customer));
+    dialogRef.afterClosed().subscribe((customer: Vehicle) => {
+      this.parkingService.parkVehicle(customer);
+    });
   }
 
   viewCustomerList() {

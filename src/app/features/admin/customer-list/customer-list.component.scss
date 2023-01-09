@@ -6,6 +6,19 @@
   .list-header {
     text-align: center;
   }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    h1 {
+      margin: 0;
+    }
+
+    span {
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
 
   table {
     margin: auto;
@@ -15,9 +28,18 @@
     }
   }
 
-  mat-paginator {
+  .footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
     position: absolute;
     bottom: 0;
-    right: 0;
+    left: 0;
+    align-items: center;
+
+    mat-paginator {
+      width: 100%;
+    }
   }
 }

@@ -4,6 +4,7 @@ import { ParkingSlot } from '../models/parking-slot';
 import { EntryPoint } from '../models/entry-point';
 import { Subject, BehaviorSubject, ReplaySubject } from 'rxjs';
 import { Vehicle } from '../models/vehicle';
+import * as moment from 'moment-timezone';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +13,13 @@ export class ParkingMapService {
   ticketList = new BehaviorSubject<number>(0);
   customerList = new Subject<Vehicle>();
   sizePercentage: number[] = [];
+  baseTime = new BehaviorSubject(new Date());
 
   constructor() { }
+
+  setTimeIn(time: number) {
+    this.baseTime.next(moment(this.baseTime.getValue()).add(time,'minutes').tz("Asia/Manila").toDate());
+  }
 
   generateTicket() {
     this.ticketList.next(this.ticketList.getValue() + 1);

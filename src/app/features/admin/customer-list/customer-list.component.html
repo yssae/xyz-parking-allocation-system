@@ -1,6 +1,9 @@
 <div class="container">
   <div class="list-header">
-    <h1 class="">List of Customers</h1>
+    <div class="header">
+      <h1 class="">List of Customers</h1>
+      <span>{{ baseTime | date: 'medium'}}</span>
+    </div>
     <xyz-input inputType="text" icon="search" placeholder="Search Customer"></xyz-input>
   </div>
   <table mat-table [dataSource]="dataSource" >
@@ -12,5 +15,8 @@
     <tr mat-row *matRowDef="let row; columns: vehicleColumn;"></tr>
   </table>
   <br>
-  <mat-paginator [length]="vehicleList.length" pageSize="5" aria-label="Select page" #paginator></mat-paginator>
+  <div class="footer">
+    <xyz-time-skip id="timeskip" (timeSkip)="triggerTimeSkip($event)"></xyz-time-skip>
+    <mat-paginator [length]="vehicleList.length" pageSize="5" aria-label="Select page" #paginator></mat-paginator>
+  </div>
 </div>

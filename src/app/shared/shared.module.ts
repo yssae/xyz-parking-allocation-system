@@ -4,10 +4,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material.module';
 import { InputComponent } from './components/input/input.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { TimeSkipComponent } from './components/time-skip/time-skip.component';
 @NgModule({
   declarations: [
     InputComponent,
-    DropdownComponent
+    DropdownComponent,
+    DialogComponent,
+    TimeSkipComponent
   ],
   imports: [
     CommonModule,
@@ -16,7 +20,9 @@ import { DropdownComponent } from './components/dropdown/dropdown.component';
   ],
   exports: [
     InputComponent,
-    DropdownComponent
+    DropdownComponent,
+    DialogComponent,
+    TimeSkipComponent
   ]
 })
 export class SharedModule { }

@@ -88,8 +88,11 @@ export class CustomerComponent implements OnInit, OnDestroy {
 
   setTime(ctrl: string) {
     if(!this.car) {
-      let currentDate = moment().format('LLL');
-      this.vehicleForm.get(ctrl)?.setValue(currentDate);
+      this.parkingService.baseTime
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(time => {
+          this.vehicleForm.get(ctrl)?.setValue(time)
+        });
     }
   }
 
