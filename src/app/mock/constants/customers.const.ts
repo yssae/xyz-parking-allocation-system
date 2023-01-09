@@ -1,13 +1,13 @@
 import { Vehicle } from "src/app/features/models/vehicle";
 
-export const customers: Vehicle[] = [
+export const customers = [
   {
     duration: 4,
     plateNumber: 'YSA4880',
     carSize: 0,
     owner: "Hunter Small Four",
     timeIn: new Date("2023-01-7"),
-    timeOut: new Date()
+    timeOut: new Date(),
   },
   {
     duration: 4,

@@ -1,11 +1,12 @@
 export interface Vehicle {
-  duration?: number,
+  duration: number,
   plateNumber: string,
   carSize: number,
-  ticket?: string,
+  ticket: string,
   owner: string
-  timeIn?: Date,
+  timeIn: Date,
   timeOut?: Date,
-  cluster?: number,
-  slot?: number
+  cluster: number,
+  slot?: number,
+  parkingFee: number,
 }

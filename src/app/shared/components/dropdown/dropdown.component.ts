@@ -16,11 +16,12 @@ export class DropdownComponent implements OnInit {
   @Input() value = '';
   @Input() control = new FormControl();
   @Input() options: Option[] = [];
+  @Input() selected = 0;
 
 
   constructor() {}
 
   ngOnInit(): void {
-    this.control.patchValue(this.options[0].value);
+    this.control.patchValue(this.options[this.selected].value);
   }
 }

@@ -3,11 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { VEHICLE_SIZE } from '../../constants/vehicle-size.const';
 import { ParkingMapService } from '../../services/parking-map.service';
-import { COLOR_INDICATOR } from '../../constants/color-indicator.const';
 import { Vehicle } from '../../models/vehicle';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import * as moment from 'moment';
 @Component({
   selector: 'app-customer',
   templateUrl: './customer.component.html',
@@ -22,6 +20,8 @@ export class CustomerComponent implements OnInit, OnDestroy {
   entrypoints: number = 3;
   entryOptions: number[] = [];
   submitted: boolean = false;
+  selectedEntry: number = 0;
+  selectedSize: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -36,7 +36,9 @@ export class CustomerComponent implements OnInit, OnDestroy {
       timeIn: ['', Validators.required],
       timeOut: '',
       ticket: 0,
-      duration: '',
+      duration: 0,
+      parkingFee: 0,
+      slot: undefined
     });
   }
 
@@ -83,7 +85,12 @@ export class CustomerComponent implements OnInit, OnDestroy {
   }
 
   mapVehicleData(vehicle: Vehicle) {
-    vehicle ? this.vehicleForm.patchValue(vehicle) : null;
+    if(vehicle) {
+      this.vehicleForm.patchValue(vehicle);
+      this.selectedEntry = vehicle.cluster;
+      this.selectedSize = vehicle.carSize;
+    }
+
   }
 
   setTime(ctrl: string) {

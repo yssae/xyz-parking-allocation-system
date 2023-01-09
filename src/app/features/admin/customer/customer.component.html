@@ -1,7 +1,7 @@
 <form [formGroup]="vehicleForm" class="container">
   <p class="xyz-body-2">Customer Details</p>
   <hr><br>
-  <xyz-dropdown fieldLabel="Entrance" [control]="vehicleForm.get('cluster')" [options]="entryOptions">
+  <xyz-dropdown fieldLabel="Entrance" [control]="vehicleForm.get('cluster')" [options]="entryOptions" [selected]="selectedEntry">
     <ng-container *ngIf="f['cluster'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['cluster'].errors?.['required']">Field is required.</p>
     </ng-container>
@@ -17,7 +17,7 @@
     </ng-container>
   </xyz-input>
   <xyz-dropdown fieldLabel="Vehicle Size" fieldName="vehicleSize" [control]="vehicleForm.get('carSize')"
-    [options]="carSizeOptions">
+    [options]="carSizeOptions" [selected]="selectedSize">
     <ng-container *ngIf="f['carSize'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['carSize'].errors?.['required']">Field is required.</p>
     </ng-container>

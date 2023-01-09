@@ -6,5 +6,6 @@ export const CUSTOMER_LIST_COLUMNS = [
   { name: 'Time In', key: 'timeIn' },
   { name: 'Time Out', key: 'timeOut' },
   { name: 'Duration', key: 'duration' },
+  { name: 'Slot', key: 'slot'},
   { name: 'Cluster', key: 'cluster' }
 ];

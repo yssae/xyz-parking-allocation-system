@@ -5,7 +5,7 @@ export const VEHICLE_SIZE: VehicleSize[] = [
     value: 0
   },
   {
-    name: 'mediun',
+    name: 'medium',
     value: 1
   },
   {
