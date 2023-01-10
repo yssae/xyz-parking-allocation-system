@@ -1,1 +1,10 @@
-<p>dialog works!</p>
+<div class="container">
+  <h1 class="header" [ngClass]="checkDialogType() ? 'success' : 'error'">{{ title | titlecase }}</h1>
+  <ng-container>
+    <img src="assets/images/icons8-checkmark-80.png" alt="" *ngIf="checkDialogType()" matTooltip="Illustration by Icons 8">
+    <img src="assets/images/flat-cross-icon.png" alt="" *ngIf="!checkDialogType()" matTooltip="Illustration by Icons 8 from Ouch!">
+  </ng-container>
+  <div class="message-wrapper">
+    <p> {{ message }} </p>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+@import "_variables.scss";
+
+.container {
+  width: 300px;
+  padding: 1em;
+  text-align: center;
+  font: 400 16px/20px $special-font;
+  img {
+    height: 50px;
+    width: 50px;
+  }
+  .message-wrapper {
+    margin: 15px auto;
+
+  }
+  .header {
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 40px;
+    text-align: center;
+    letter-spacing: 0.05em;
+  }
+  .success {
+    color: #B1D07A;
+  }
+  .error {
+    color: #DC6143;
+  }
+}
