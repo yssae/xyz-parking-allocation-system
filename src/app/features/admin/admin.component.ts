@@ -16,6 +16,7 @@ import { ParkingMapService } from '../services/parking-map.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as moment from 'moment-timezone';
+import { customers } from 'src/app/mock/constants/customers.const';
 const vehicle: Vehicle = {
   duration: 5.5,
   plateNumber: "PLATE-4885",
@@ -78,8 +79,12 @@ export class AdminComponent implements OnInit, OnDestroy {
         this.customerList.splice(index, 1, customer);
       }
     });
-    if(!hasDuplicate) {
+
+    if(!hasDuplicate && customer.slot !== undefined) {
       this.customerList.push(customer);
+    }
+    if(customer.slot == undefined) {
+      this.dialog.open(DialogComponent, { data: { type: 'error', message: 'There are no available slots available slots at the moment. Try again later.' } })
     }
   }
 
@@ -94,22 +99,23 @@ export class AdminComponent implements OnInit, OnDestroy {
   parkVehicle(vehicle: Vehicle) {
     let slot = new Object() as ParkingSlot | any;
     this.clusters.forEach(cluster => {
-      if(vehicle.cluster == cluster) {
+      if(vehicle.cluster == cluster && this.parkingMap[cluster]) { // straightforward
         slot = this.parkingMap[cluster].slots?.find(slot => (slot.size >= vehicle.carSize) && slot.availability);
       }
-      if(!slot && !slot?.availability) {
+      if(!slot || !slot?.availability) {
         slot = this.compareMedian(vehicle)
       }
     });
-    if(slot) {
-      let index = this.parkingMap[slot.cluster].slots.findIndex(record => record.distance == slot.distance);
-      this.parkingMap[slot.cluster].slots[index].availability = false;
-      this.parkingMap[slot.cluster].slots[index].color = COLOR_INDICATOR.occupied;
-      this.parkingMap[slot.cluster].slots[index].vehicle = vehicle;
-      vehicle.slot = slot.distance;
-    }
-    else {
-      // snackbar or dialog
+    if(slot) { // from other entrypoints
+      if(this.parkingMap[slot.cluster]) {
+        let index = this.parkingMap[slot.cluster].slots.findIndex(record => record.distance == slot.distance);
+        if(index !== -1) {
+          this.parkingMap[slot.cluster].slots[index].availability = false;
+          this.parkingMap[slot.cluster].slots[index].color = COLOR_INDICATOR.occupied;
+          this.parkingMap[slot.cluster].slots[index].vehicle = vehicle;
+          vehicle.slot = slot.distance;
+        }
+      }
     }
   }
 
