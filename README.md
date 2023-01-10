@@ -1,27 +1,11 @@
 # XyzParking
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.1.3.
+XYZ Parking Allocation System is a parking web application built with Angular that pre-assigns a slot for every vehicle coming into the Object Oriented Mall Complex.
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Getting Started
+1. Install Node.js and Angular CLI on your machine.
+2. Clone this repository using git clone https://github.com/alyssaelesterio/xyz-parking-allocation-system
+3. Navigate to the project directory using cd xyz-parking-allocation-system
+4. Install the project dependencies using npm install
+5. Start the development server using ng serve
+6. Open a web browser and navigate to http://localhost:4200 to view the app
