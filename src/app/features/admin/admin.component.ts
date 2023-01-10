@@ -46,6 +46,7 @@ export class AdminComponent implements OnInit, OnDestroy {
   sizesOfSlots: number[] = [20, 10, 10];
   totalSlots: number = 40;
   ticketList: number[] = [];
+  cols: number = 8;
 
   constructor(
     private dialog: MatDialog,
@@ -63,6 +64,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.parkingService.customerList.pipe(takeUntil(this.ngUnsubscribe)).subscribe(customer => {
       this.customerList = this.customerList.filter(record => !(moment(this.baseTime).diff(record.timeOut, 'minutes') > 60 && record.slot == undefined));
       if(this.customerList.find(record => record.plateNumber == customer.plateNumber && customer.slot !== undefined)) {
+        this.dialog.open(DialogComponent, { data: { type: 'error', message: 'Vehicle is already parked.' } })
         return;
       }
       this.parkVehicle(customer);
@@ -93,6 +95,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     this.sizeAllocation = this.parkingService.computeSizesPerCluster(this.sizesOfSlots, this.entrypoints.value);
     this.clusterSlots = this.parkingService.computeClusterSlots(this.sizeAllocation);
     this.parkingMap = this.parkingService.createEntryPoints(this.clusterSlots, this.sizeAllocation);
+    this.cols = this.clusterSlots[0];
     console.log(this.parkingMap)
   }
 
@@ -187,7 +190,7 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   viewSlot(slot: ParkingSlot) {
     let dialogRef = this.dialog.open(SlotModalComponent, { data: { slotData: slot } });
-    dialogRef.afterClosed().subscribe((response) => response ? this.unparkVehicle(slot) : '');
+    dialogRef.afterClosed().pipe(takeUntil(this.ngUnsubscribe)).subscribe((response) => response ? this.unparkVehicle(slot) : '');
   }
 
   setControls() {
@@ -219,7 +222,9 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   getBaseTime() {
-    this.parkingService.baseTime.subscribe(time => {
+    this.parkingService.baseTime.
+    pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe(time => {
       this.baseTime = time;
       this.customerList.forEach(customer => {
         let durationInMins = moment(this.baseTime).diff(moment(customer.timeIn), 'minutes');

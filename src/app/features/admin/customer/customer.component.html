@@ -9,6 +9,7 @@
   <xyz-input fieldLabel="Customer Name" [control]="vehicleForm.get('owner')">
     <ng-container *ngIf="f['owner'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['owner'].errors?.['required']">Field is required.</p>
+      <p class="xyz-field-error right-aligned" *ngIf="f['owner'].errors?.['pattern']">Invalid input.</p>
     </ng-container>
   </xyz-input>
   <xyz-input fieldLabel="Plate Number" [control]="vehicleForm.get('plateNumber')">

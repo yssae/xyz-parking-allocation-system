@@ -94,7 +94,10 @@ export class ParkingMapService {
   }
 
   setDuration(duration: number): number {
-    return 0 <duration &&duration < 1 ? 1 : Math.round(duration);
+    if (duration === 0) {
+      return 1;
+    }
+    return duration < 1 ? 1 : Math.round(duration);
   }
 
   computeParkingFee(vehicle: Vehicle, slot: ParkingSlot): number {

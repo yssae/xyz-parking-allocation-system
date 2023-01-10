@@ -35,7 +35,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
       cluster: ['', Validators.required],
       carSize: ['', Validators.required],
       plateNumber: ['', Validators.required],
-      owner: ['', Validators.required],
+      owner: ['', [ Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
       timeIn: ['', Validators.required],
       timeOut: undefined,
       ticket: 0,
@@ -86,7 +86,7 @@ export class CustomerComponent implements OnInit, OnDestroy {
   }
 
   hasPrevRecord() {
-    return (this.car?.ticket && this.ticket?.value !== 0) ? true : false;
+    return this.car?.ticket && this.ticket?.value !== 0;
   }
 
   mapVehicleData(vehicle: Vehicle) {
