@@ -1,0 +1,11 @@
+<div class="container">
+  <h2> Receipt </h2>
+  <div class="body xyz-body-1">
+    <div class="vehicle-info" *ngFor="let item of properties">
+      <p> {{ item.name | titlecase }}</p>
+      <p> {{ vehicle[item.key] }}</p>
+    </div>
+  </div>
+  <br>
+  <button class="xyz-body normal" mat-dialog-close>Close</button>
+</div>

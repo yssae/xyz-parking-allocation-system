@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, AfterViewInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DatePipe } from '@angular/common';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
-import { customers } from 'src/app/mock/constants/customers.const';
 import { CUSTOMER_LIST_COLUMNS } from '../../constants/customer-list-columns.const';
 import { CustomerComponent } from '../customer/customer.component';
 import { Vehicle } from '../../models/vehicle';
@@ -25,16 +25,26 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
   vehicleList: Vehicle[];
 
   constructor(
+    private datePipe: DatePipe,
     private dialog: MatDialog,
+    public dialogRef: MatDialogRef<CustomerListComponent>,
     private parkingService: ParkingMapService,
     @Inject(MAT_DIALOG_DATA) private data: DialogData) {
       this.vehicleList = this.data.customers;
       this.entrypoints = this.data.entrypoints;
+      this.baseTime = this.data.baseTime;
       this.dataSource = new MatTableDataSource(this.vehicleList);
     }
 
   ngOnInit(): void {
     this.getBaseTime();
+  }
+
+  formatColumn(key: any) {
+    if(typeof key == 'object') {
+      return this.datePipe.transform(key, 'short');
+    }
+    return key;
   }
 
   ngAfterViewInit() {
@@ -45,9 +55,12 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialog.open(CustomerComponent, {
       data: {
         entrypoints: this.entrypoints,
-        slotData : { vehicle : vehicle }
+        slotData : { vehicle : vehicle },
+        baseTime: this.data.baseTime
       }
     })
+
+    this.dialogRef.close()
   }
 
   triggerTimeSkip(time: number) {

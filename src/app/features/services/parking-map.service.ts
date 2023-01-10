@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { COLOR_INDICATOR } from '../constants/color-indicator.const';
+import { PARKING_RATES } from '../constants/parking-rates.const';
 import { ParkingSlot } from '../models/parking-slot';
 import { EntryPoint } from '../models/entry-point';
 import { Subject, BehaviorSubject, ReplaySubject } from 'rxjs';
@@ -92,7 +93,26 @@ export class ParkingMapService {
     return temp;
   }
 
-  isEligibleForContinuousRate(vehicle: Vehicle) {}
+  setDuration(duration: number): number {
+    return 0 <duration &&duration < 1 ? 1 : Math.round(duration);
+  }
+
+  computeParkingFee(vehicle: Vehicle, slot: ParkingSlot): number {
+    let fee = 0;
+    let exceeding = 0;
+    vehicle.duration = this.setDuration(vehicle.duration);
+    if (vehicle.duration >= 24) {
+      fee = Math.trunc(vehicle.duration / 24) * PARKING_RATES.FULL_24_CHUNK;
+      exceeding = (vehicle.duration % 24) * PARKING_RATES.EXCEEDING_RATE[slot.size];
+    }
+    else {
+      fee = vehicle.duration * PARKING_RATES.FLAT_RATE;
+      if (vehicle.duration > 3) {
+        fee += (vehicle.duration - 3) * PARKING_RATES.EXCEEDING_RATE[slot.size];
+      }
+    }
+    return (fee + exceeding) - vehicle.parkingFee;
+  }
 
   parkVehicle(vehicle: Vehicle) {
     if(vehicle) {
@@ -100,7 +120,13 @@ export class ParkingMapService {
     }
   }
 
-  unparkVehicle() {}
+  resetSlot(slot: ParkingSlot) {
+    if(slot) {
+      slot.availability = true;
+      slot.color = COLOR_INDICATOR.available;
+      slot.vehicle = undefined;
+    }
+  }
 
   get customers() {
     return this.customerList;

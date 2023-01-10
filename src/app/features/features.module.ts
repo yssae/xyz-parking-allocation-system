@@ -9,13 +9,15 @@ import { ParkingSettingsComponent } from './admin/parking-settings/parking-setti
 import { CustomerListComponent } from './admin/customer-list/customer-list.component';
 import { SlotModalComponent } from './admin/slot-modal/slot-modal.component';
 import { CustomerComponent } from './admin/customer/customer.component';
+import { ReceiptComponent } from './admin/receipt/receipt.component';
 @NgModule({
   declarations: [
     AdminComponent,
     ParkingSettingsComponent,
     CustomerListComponent,
     SlotModalComponent,
-    CustomerComponent
+    CustomerComponent,
+    ReceiptComponent
   ],
   imports: [
     CommonModule,
