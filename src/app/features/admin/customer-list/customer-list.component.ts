@@ -10,6 +10,7 @@ import { DialogData } from '../../models/dialog-data';
 import { ParkingMapService } from '../../services/parking-map.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { FormControl } from '@angular/forms';
 @Component({
   selector: 'xyz-customer-list',
   templateUrl: './customer-list.component.html',
@@ -17,6 +18,7 @@ import { Subject } from 'rxjs';
 })
 export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator | any;
+  search = new FormControl('');
   private ngUnsubscribe = new Subject();
   baseTime: Date = new Date();
   dataSource: MatTableDataSource<Vehicle>;
@@ -38,6 +40,7 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.getBaseTime();
+    this.searchCustomer();
   }
 
   formatColumn(key: any) {
@@ -61,6 +64,12 @@ export class CustomerListComponent implements OnInit, AfterViewInit, OnDestroy {
     })
 
     this.dialogRef.close()
+  }
+
+  searchCustomer() {
+    this.search.valueChanges.pipe(takeUntil(this.ngUnsubscribe)).subscribe(value => {
+      this.dataSource.filter = value ? value.trim().toLowerCase() : '';
+    })
   }
 
   triggerTimeSkip(time: number) {

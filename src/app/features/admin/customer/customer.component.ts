@@ -34,8 +34,8 @@ export class CustomerComponent implements OnInit, OnDestroy {
     this.vehicleForm = this.fb.group({
       cluster: ['', Validators.required],
       carSize: ['', Validators.required],
-      plateNumber: ['', Validators.required],
-      owner: ['', [ Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]],
+      plateNumber: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9-]*$/)]],
+      owner: ['', [ Validators.required, Validators.pattern(/^[a-zA-Z\s]+$/)]],
       timeIn: ['', Validators.required],
       timeOut: undefined,
       ticket: 0,
