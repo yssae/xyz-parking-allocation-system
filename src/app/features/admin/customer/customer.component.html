@@ -15,6 +15,7 @@
   <xyz-input fieldLabel="Plate Number" [control]="vehicleForm.get('plateNumber')">
     <ng-container *ngIf="f['plateNumber'].errors && submitted">
       <p class="xyz-field-error right-aligned" *ngIf="f['plateNumber'].errors?.['required']">Field is required.</p>
+      <p class="xyz-field-error right-aligned" *ngIf="f['plateNumber'].errors?.['pattern']">Invalid input.</p>
     </ng-container>
   </xyz-input>
   <xyz-dropdown fieldLabel="Vehicle Size" fieldName="vehicleSize" [control]="vehicleForm.get('carSize')"
