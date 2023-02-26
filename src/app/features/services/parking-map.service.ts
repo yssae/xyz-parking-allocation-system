@@ -26,7 +26,7 @@ export class ParkingMapService {
     this.ticketList.next(this.ticketList.getValue() + 1);
   }
 
-  computeSizePercent(total: number, sizes: number[]) {
+  computeSizePercent(total: number, sizes: number[]): number[] {
     this.sizePercentage = sizes.map(size => (size / total));
     return sizes.map(size => (size / total))
   }
@@ -44,7 +44,7 @@ export class ParkingMapService {
       return {
         name: 'E' + (index + 1),
         totalSlots: cluster,
-        median: (prev + (counter - 1)) / 2,
+        median: (prev + (counter-1)) / 2,
         slotSizeAllocation: sizeAlloc[index],
         slots: this.assignSlots(cluster, index, prev, sizeAlloc[index]),
       }
@@ -109,13 +109,17 @@ export class ParkingMapService {
       exceeding = (vehicle.duration % 24) * PARKING_RATES.EXCEEDING_RATE[slot.size];
     }
     else {
-      fee = vehicle.duration * PARKING_RATES.FLAT_RATE;
-      if (vehicle.duration > 3) {
-        fee += (vehicle.duration - 3) * PARKING_RATES.EXCEEDING_RATE[slot.size];
+      if (vehicle.duration <= 3) {
+        fee = vehicle.duration * PARKING_RATES.FLAT_RATE;
+      }
+      else {
+        fee = 3 * PARKING_RATES.FLAT_RATE;
+        exceeding = (vehicle.duration - 3) * PARKING_RATES.EXCEEDING_RATE[slot.size];
       }
     }
     return (fee + exceeding) - vehicle.parkingFee;
   }
+
 
   parkVehicle(vehicle: Vehicle) {
     if(vehicle) {

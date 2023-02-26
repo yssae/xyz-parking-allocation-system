@@ -36,6 +36,9 @@
                 "src/app/shared/styles"
               ]
             },
+            "allowedCommonJsDependencies": [
+              "moment-timezone"
+            ],
             "scripts": []
           },
           "configurations": {

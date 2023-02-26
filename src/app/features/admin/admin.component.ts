@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ParkingSettingsComponent } from './parking-settings/parking-settings.component';
@@ -16,19 +16,7 @@ import { ParkingMapService } from '../services/parking-map.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import * as moment from 'moment-timezone';
-import { customers } from 'src/app/mock/constants/customers.const';
-const vehicle: Vehicle = {
-  duration: 5.5,
-  plateNumber: "PLATE-4885",
-  carSize: 0,
-  ticket: "1",
-  owner: "Alyssa Kate",
-  timeIn: new Date(),
-  timeOut: new Date(),
-  cluster: 0,
-  slot: 25,
-  parkingFee: 180
-};
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -105,11 +93,11 @@ export class AdminComponent implements OnInit, OnDestroy {
       if(vehicle.cluster == cluster && this.parkingMap[cluster]) { // straightforward
         slot = this.parkingMap[cluster].slots?.find(slot => (slot.size >= vehicle.carSize) && slot.availability);
       }
-      if(!slot || !slot?.availability) {
+      if(!slot || !slot?.availability) { // from other entrypoints
         slot = this.compareMedian(vehicle)
       }
     });
-    if(slot) { // from other entrypoints
+    if(slot) {
       if(this.parkingMap[slot.cluster]) {
         let index = this.parkingMap[slot.cluster].slots.findIndex(record => record.distance == slot.distance);
         if(index !== -1) {
